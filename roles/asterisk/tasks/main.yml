@@ -173,7 +173,7 @@
   tags: compile
   become: true
 
-- name: compile Asterisk MP4
+- name: run get_mp3_source.sh
   shell: cd /usr/src/{{ item }} && ./contrib/scripts/get_mp3_source.sh
   ignore_errors: yes
   with_items:
@@ -181,7 +181,7 @@
   tags: compile
   become: true
 
-- name: menuselect
+- name: menuselect, enable for
   shell: cd /usr/src/{{ item }} && make menuselect.makeopts && menuselect/menuselect --enable format_mp3
   with_items:
     - "{{ packages.asterisk.dir }}"

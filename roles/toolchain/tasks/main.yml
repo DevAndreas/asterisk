@@ -1,6 +1,7 @@
 ---
 - shell: uname -r
   register: uname
+  tags: always
 
 - name: install toolchain
   apt:
