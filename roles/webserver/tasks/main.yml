@@ -6,7 +6,6 @@
   with_items:
     - apache2
   tags: pkg-install
-  become: true
 
 - name: install PHP5 and modules
   apt:
@@ -20,8 +19,12 @@
     - php-pear
     - php5-gd
   tags: pkg-install
-  become: true
 
-# enmod rewrite
-#a2enmod rewrite
-#service apache2 restart
+- name: enable rewrite module
+  command: a2enmod rewrite
+
+- name: restart apache2
+  service:
+    name=apache2
+    enabled=yes
+    state=restarted

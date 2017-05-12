@@ -1,0 +1,14 @@
+---
+- hosts: 127.0.0.1
+  connection: local
+  gather_facts: no
+
+  become: true
+  become_user: root
+
+  pre_tasks:
+    - name: update apt cache
+      apt: update_cache=yes
+
+  roles:
+    - { role: asterisk }

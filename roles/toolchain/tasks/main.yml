@@ -21,7 +21,6 @@
   tags: 
     - pkg-install
     - install-toolchain
-  become: true
 
 - name: uninstall toolchain
   apt:
@@ -43,4 +42,3 @@
   tags:
     - uninstall-toolchain
     - pkg-uninstall
-  become: true
