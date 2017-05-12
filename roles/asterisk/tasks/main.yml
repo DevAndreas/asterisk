@@ -5,7 +5,7 @@
 - name: install packages for runtime
   apt:
     name: "{{ item }}"
-    stage: present
+    state: present
   with_items:
     - libxslt1.1
   tags: pkg-install
