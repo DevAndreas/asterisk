@@ -1,0 +1,265 @@
+---
+- include_vars:
+    file: sources.yml
+
+- name: install dev
+  apt:
+    name={{ item }}
+    state=present
+  with_items:
+    - sox
+    - mpg123
+    - libasound2-dev
+    - libogg-dev
+    - libvorbis-dev
+    - libncurses5-dev
+    - libssl-dev
+    - libmysqlclient-dev
+    - libxml2-dev
+    - libnewt-dev
+    - libsqlite3-dev
+    - unixodbc-dev
+    - uuid
+    - uuid-dev
+    - libcurl4-openssl-dev
+    - libical-dev
+    - libneon27-dev
+    - libsrtp0-dev
+    - libspandsp-dev
+  tags: 
+    - pkg-install
+  become: true
+
+- name: uninstall dev
+  apt:
+    name={{ item }}
+    state=absent
+    purge=yes
+    autoremove=yes
+  with_items:
+    - libasound2-dev
+    - libogg-dev
+    - libvorbis-dev
+    - libncurses5-dev
+    - libssl-dev
+    - libmysqlclient-dev
+    - libxml2-dev
+    - libnewt-dev
+    - libsqlite3-dev
+    - unixodbc-dev
+    - uuid-dev
+    - libcurl4-openssl-dev
+    - libical-dev
+    - libneon27-dev
+    - libsrtp0-dev
+    - libspandsp-dev
+  tags: 
+    - pkg-uninstall
+    - dev-uninstall
+  become: true
+
+- name: install libvpb0
+  apt:
+    name: libvpb0
+    state: present
+  tags: pkg-install
+  become: true
+
+- debconf:
+    name: libvpb0
+    question: libvpb0/countrycode
+    value: 7
+    vtype: string
+  become: true
+
+- name: PEAR
+  pear:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - Console_Getopt
+  become: true
+
+- name: download sources
+  get_url:
+    url: "{{ item.url }}"
+    dest: /usr/src/{{ item.file }}
+    mode: 0444
+    force: no
+    validate_certs: no
+  with_items:
+    - { url: "{{ packages.lame.url }}",         file: "{{ packages.lame.file }}"     }
+    - { url: "{{ packages.dahdi.url }}",        file: "{{ packages.dahdi.file }}"    }
+    - { url: "{{ packages.libpri.url }}",       file: "{{ packages.libpri.file }}"   }
+    - { url: "{{ packages.spandsp.url }}",      file: "{{ packages.spandsp.file }}"  }
+    - { url: "{{ packages.pjsip.url }}",        file: "{{ packages.pjsip.file }}"    }
+    - { url: "{{ packages.asterisk.url }}",     file: "{{ packages.asterisk.file }}" }
+    - { url: "{{ packages.en_sounds.url }}",       file: "{{ packages.en_sounds.file }}" }
+    - { url: "{{ packages.en_sounds_extra.url }}", file: "{{ packages.en_sounds_extra.file }}" }
+    - { url: "{{ packages.en_wide.url }}",         file: "{{ packages.en_wide.file }}" }
+    - { url: "{{ packages.en_wide_extra.url }}",   file: "{{ packages.en_wide_extra.file }}" }
+    - { url: "{{ packages.ru_sounds.url }}",       file: "{{ packages.ru_sounds.file }}" }
+    - { url: "{{ packages.ru_wide.url }}",         file: "{{ packages.ru_wide.file }}" }
+  tags: downloads
+  become: true
+
+- name: clone jansson
+  git:
+    repo: 'https://github.com/akheron/jansson.git'
+    dest: /usr/src/jansson
+  become: true
+
+- name: Unarchive source files
+  unarchive:
+    src: "/usr/src/{{ item }}"
+    dest: /usr/src
+    creates: no
+  with_items:
+    - "{{ packages.lame.file }}"
+    - "{{ packages.dahdi.file }}"
+    - "{{ packages.libpri.file }}"
+    - "{{ packages.spandsp.file }}"
+    - "{{ packages.pjsip.file }}"
+    - "{{ packages.asterisk.file }}"
+  tags: unarchive
+  become: true
+
+- name: compile Lime
+  shell: cd /usr/src/{{ item }} && ./configure && make && make install
+  with_items:
+    - "{{ packages.lame.dir }}"
+  tags: compile
+  become: true
+
+- name: compile Dahdi
+  shell: cd /usr/src/{{ item }} && make all && make && make config
+  with_items:
+    - "{{ packages.dahdi.dir }}"
+  tags: compile
+  become: true
+
+- name: compile LibPRI
+  shell: cd /usr/src/{{ item }} && make && make install
+  with_items:
+    - "{{ packages.libpri.dir }}"
+  tags: compile
+  become: true
+
+- name: compile PJSip
+  shell: cd /usr/src/{{ item }} && CFLAGS='-DPJ_HAS_IPV6=1' ./configure --prefix=/usr --enable-shared --disable-sound --disable-resample --disable-video --disable-opencore-amr && make dep && make && make install
+  with_items:
+    - "{{ packages.pjsip.dir }}"
+  tags: compile
+  become: true
+
+- name: compile Jansson
+  shell: cd /usr/src/{{ item }} && autoreconf -i && ./configure && make && make install
+  with_items:
+    - jansson
+  tags: compile
+  become: true
+
+- name: compile SpanDSP
+  shell: cd /usr/src/{{ item }} && ./configure && make && make install
+  with_items:
+    - "{{ packages.spandsp.dir }}"
+  tags: compile
+  become: true
+
+- name: compile Asterisk
+  shell: cd /usr/src/{{ item }} && contrib/scripts/install_prereq install && ./configure
+  with_items:
+    - "{{ packages.asterisk.dir }}"
+  tags: compile
+  become: true
+
+- name: compile Asterisk MP4
+  shell: cd /usr/src/{{ item }} && ./contrib/scripts/get_mp3_source.sh
+  ignore_errors: yes
+  with_items:
+    - "{{ packages.asterisk.dir }}"
+  tags: compile
+  become: true
+
+- name: menuselect
+  shell: cd /usr/src/{{ item }} && make menuselect.makeopts && menuselect/menuselect --enable format_mp3
+  with_items:
+    - "{{ packages.asterisk.dir }}"
+  tags: compile
+  become: true
+
+- name: compile Asterisk [continue]
+  shell: cd /usr/src/{{ item }} && make && make install && make config && make samples && ldconfig
+  with_items:
+    - "{{ packages.asterisk.dir }}"
+  tags: compile
+  become: true
+
+- user:
+    name: asterisk
+    comment: "Asterisk PBX"
+  become: true
+
+- file:
+    path: /var/lib/asterisk/sounds/ru
+    state: directory
+    mode: 0755
+  become: true
+
+- file:
+    path: "{{ item }}"
+    owner: asterisk
+    group: asterisk
+  become: true
+  with_items:
+    - /var/run/asterisk
+    - /etc/asterisk
+    - /var/lib/asterisk
+    - /var/log/asterisk
+    - /var/spool/asterisk
+    - /usr/lib/asterisk
+
+- name: set ODBC inst
+  become: true
+  copy:
+    src: odbcinst.ini
+    dest: /etc/odbcinst.ini
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+
+- name: set ODBC ini
+  become: true
+  copy:
+    src: odbc.ini
+    dest: /etc/odbc.ini
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+
+
+- name: Unarchive EN sound files
+  unarchive:
+    src: "/usr/src/{{ item }}"
+    dest: /var/lib/asterisk/sounds/en
+    creates: no
+  with_items:
+    - "{{ packages.en_sounds.file }}"
+    - "{{ packages.en_sounds_extra.file }}"
+    - "{{ packages.en_wide.file }}"
+    - "{{ packages.en_wide_extra.file }}"
+  tags: unarchive
+  become: true
+
+- name: Unarchive RU sound files
+  unarchive:
+    src: "/usr/src/{{ item }}"
+    dest: /var/lib/asterisk/sounds/ru
+    creates: no
+  with_items:
+    - "{{ packages.ru_sounds.file }}"
+    - "{{ packages.ru_wide.file }}"
+  tags: unarchive
+  become: true

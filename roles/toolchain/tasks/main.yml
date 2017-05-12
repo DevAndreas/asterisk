@@ -1,0 +1,45 @@
+---
+- shell: uname -r
+  register: uname
+
+- name: install toolchain
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - build-essential
+    - linux-headers-{{ uname.stdout }}
+    - bison
+    - flex
+    - automake
+    - libtool
+    - autoconf
+    - uuid
+    - uuid-dev
+    - pkg-config
+  tags: 
+    - pkg-install
+    - install-toolchain
+  become: true
+
+- name: uninstall toolchain
+  apt:
+    name={{ item }}
+    state=absent
+    autoremove=yes
+    purge=yes
+  with_items:
+    - build-essential
+    - linux-headers-{{ uname.stdout }}
+    - bison
+    - flex
+    - automake
+    - libtool
+    - autoconf
+    - uuid
+    - uuid-dev
+    - pkg-config
+  tags:
+    - uninstall-toolchain
+    - pkg-uninstall
+  become: true

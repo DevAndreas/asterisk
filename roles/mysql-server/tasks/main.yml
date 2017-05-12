@@ -1,0 +1,11 @@
+---
+- name: install mysql-server
+  apt:
+    name={{ item }}
+    state=present
+  with_items:
+    - mysql-server
+    - mysql-client
+    - libmyodbc
+  tags: pkg-install
+  become: true

@@ -1,0 +1,54 @@
+packages:
+  lame:
+    url:  "http://sourceforge.net/projects/lame/files/lame/3.99/lame-3.99.5.tar.gz"
+    file: "lame-3.99.5.tar.gz"
+    dir:  "lame-3.99.5"
+
+  dahdi:
+    url:  "http://downloads.asterisk.org/pub/telephony/dahdi-linux-complete/dahdi-linux-complete-2.11.1+2.11.1.tar.gz"
+    file: "dahdi-linux-complete-2.11.1+2.11.1.tar.gz"
+    dir:  "dahdi-linux-complete-2.11.1+2.11.1"
+
+  libpri:
+    url:  "http://downloads.asterisk.org/pub/telephony/libpri/libpri-1.6.0.tar.gz"
+    file: "libpri-1.6.0.tar.gz"
+    dir:  "libpri-1.6.0"
+
+  spandsp:
+    url:  "https://soft-switch.org/downloads/spandsp/spandsp-0.0.6.tar.gz"
+    file: "spandsp-0.0.6.tar.gz"
+    dir:  "spandsp-0.0.6"
+
+  pjsip:
+    url:  "http://www.pjsip.org/release/2.6/pjproject-2.6.tar.bz2"
+    file: "pjproject-2.6.tar.bz2"
+    dir:  "pjproject-2.6"
+
+  asterisk:
+    url:  "http://downloads.asterisk.org/pub/telephony/asterisk/asterisk-13.15.0.tar.gz"
+    file: "asterisk-13.15.0.tar.gz"
+    dir:  "asterisk-13.15.0"
+
+  en_sounds:
+    url:  "http://downloads.asterisk.org/pub/telephony/sounds/asterisk-core-sounds-en-wav-current.tar.gz"
+    file: "asterisk-core-sounds-ru-wav-current.tar.gz"
+
+  en_sounds_extra:
+    url:  "http://downloads.asterisk.org/pub/telephony/sounds/asterisk-extra-sounds-en-wav-current.tar.gz"
+    file: "asterisk-extra-sounds-ru-wav-current.tar.gz"
+
+  en_wide:
+    url:  "http://downloads.asterisk.org/pub/telephony/sounds/asterisk-core-sounds-en-g722-current.tar.gz"
+    file: "asterisk-core-sounds-ru-g722-current.tar.gz"
+
+  en_wide_extra:
+    url:  "http://downloads.asterisk.org/pub/telephony/sounds/asterisk-extra-sounds-en-g722-current.tar.gz"
+    file: "asterisk-extra-sounds-ru-g722-current.tar.gz"
+
+  ru_sounds:
+    url:  "http://downloads.asterisk.org/pub/telephony/sounds/asterisk-core-sounds-ru-wav-current.tar.gz"
+    file: "asterisk-core-sounds-ru-wav-current.tar.gz"
+
+  ru_wide:
+    url:  "http://downloads.asterisk.org/pub/telephony/sounds/asterisk-core-sounds-ru-g722-current.tar.gz"
+    file: "asterisk-core-sounds-ru-g722-current.tar.gz"

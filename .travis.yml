@@ -9,4 +9,4 @@ install:
   - sudo apt-get install ansible
 
 script:
-  - echo "Finished"
+  - ./start.sh
