@@ -13,4 +13,12 @@
     - mc
     - curl
     - sqlite3
+    - python-pip
+    - screen
+  tags: pkg-install
+
+- name: install python modules
+  pip:
+    name=MySQL-python
+    state=present
   tags: pkg-install

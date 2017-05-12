@@ -8,3 +8,5 @@
     - mysql-client
     - libmyodbc
   tags: pkg-install
+
+- include: common.yml
