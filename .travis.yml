@@ -9,5 +9,5 @@ install:
   - sudo apt-get install ansible
 
 script:
-  - sudo ansible-playbook -i inventory provision.yml --skip-tags "uninstall-toolchain,dev-uninstall"
-  - sudo ansible-playbook -i inventory provision.yml --tags "uninstall-toolchain,dev-uninstall"
+  - sudo ansible-playbook -i inventory play_asterisk.yml --skip-tags "uninstall-toolchain,dev-uninstall"
+  - sudo ansible-playbook -i inventory play_asterisk.yml --tags "uninstall-toolchain,dev-uninstall"
