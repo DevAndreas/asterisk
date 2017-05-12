@@ -1,0 +1,17 @@
+---
+- name: create /etc/odbc.ini
+  template:
+    src:  odbc.ini
+    dest: /etc/odbc.ini
+
+- name: create asterisk files
+  template:
+    src:  asterisk/{{ item }}
+    dest: /etc/asterisk/{{ item }}
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+  with_items:
+    - sip.conf
+    - cdr_adaptive_odbc.conf

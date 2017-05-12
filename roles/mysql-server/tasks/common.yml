@@ -1,0 +1,37 @@
+- name: change root password
+  mysql_user:
+    name=root
+    password={{ mysql_root_password }}
+    state=present
+
+- name: create ~/.my.cnf
+  template:
+    dest=~/.my.cnf
+    src=.my.cnf
+
+- name: create mysql databases
+  mysql_db:
+    name={{ item }}
+    encoding=utf8
+    collation=utf8_general_ci
+    state=present
+  with_items:
+    - "{{ database_name }}"
+  notify:
+    - restart mysql
+
+- name: create mysql user
+  mysql_user:
+    name={{ database_user }}
+    password={{ database_password }}
+    host=%
+    priv=*.*:all
+    state=present
+  notify:
+    - restart mysql
+
+- name: ensure mysql is running
+  service:
+    name=mysql
+    enabled=yes
+    state=started
